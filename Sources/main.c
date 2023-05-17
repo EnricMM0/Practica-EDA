@@ -45,6 +45,9 @@ int menu(){
                     for (int j = 0; j < 5; j++) {
                         scanf("%s", &userlist[i].hobby[j]);
                     }
+                    for (int j = 0; j<MAX_FRIENDS; j++){
+                        userlist[i].friends[j] = -1;
+                    }
                     newuser = 0;
                 }
                 i += 1;
@@ -54,7 +57,7 @@ int menu(){
         else if (opt == 2){
             for (int i = 0; i < MAX_USERS; i++){
                 if (userlist[i].user != -1){
-                    printf("%s\tEdat:%d\tHobbies:%s",userlist[i].user,userlist[i].age,userlist[i].hobby);
+                    printf("%s\tEdat:%d\tHobbies:%s",&userlist[i].user,userlist[i].age,userlist[i].hobby);
                 }
             }
             return 0;
@@ -68,7 +71,7 @@ int menu(){
             for (int i = 0; i < MAX_USERS; i++){
                 if (userlist[i].user != -1){
                     if (strcmp(&userlist[i].user,selected_user) == 0){
-                        found_user = i;
+                        found_user=i;
                         break;
                     }
                 }
@@ -77,11 +80,44 @@ int menu(){
                 printf("No s'ha trobat l'usuari seleccionat\n");
             }
             else{
-                printf("Nom:%s\n",userlist[found_user].user);
+                printf("Nom:%s\n",&userlist[found_user].user);
                 printf("Edat:%d\n",userlist[found_user].age);
                 printf("Mail:%s\n",userlist[found_user].mail);
                 printf("Ubicacio:%s\n",userlist[found_user].loc);
-                printf("Hobbies:%s,%s,%s,%s,%s\n",userlist[found_user].hobby[0],userlist[found_user].hobby[1],userlist[found_user].hobby[2],userlist[found_user].hobby[3],userlist[found_user].hobby[4]);
+                printf("Hobbies:%s,%s,%s,%s,%s\n",&userlist[found_user].hobby[0],&userlist[found_user].hobby[1],&userlist[found_user].hobby[2],&userlist[found_user].hobby[3],&userlist[found_user].hobby[4]);
+                User selected_user = userlist[found_user];
+                //Processos usuari
+                printf("\n1. Solicitud amistat\n2. Canviar d'usuari");
+                opt = -1;
+                while (opt == -1) {
+                    if (opt == 1) {
+                        char friend[MAX_LENGTH];
+                        scanf("%s", &friend);
+                        int found_user = -1;
+                        for (int i = 0; i < MAX_USERS; i++) {
+                            if (userlist[i].user != -1) {
+                                if (strcmp(&userlist[i].user, friend) == 0) {
+                                    User friend = userlist[i];
+                                    found_user = 1;
+                                    break;
+                                }
+                            }
+                        }
+                        if (found_user == 1){
+                            int newfriend = 0;
+                            int i = 0;
+                            while ((newfriend == 0) && (i <= MAX_FRIENDS)){
+                                if (selected_user.friends[i] == -1 ){
+                                    selected_user.friends[i] = friend;
+                                    newfriend = 1;
+                                }
+                                i += 1;
+
+                            }
+                        }
+                        else printf("No s'ha trobat l'usuari.");
+                    }
+                }
             }
         }
         else if (opt == 4) {
