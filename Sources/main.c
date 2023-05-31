@@ -15,7 +15,7 @@ typedef struct{
 } User;
 
 void print_menu(){
-    printf("1.Insertar usuari nou\n2.Mostrar usuaris existents\n3.Seleccionar usuari\n4.Sortir\n");
+    printf("1.Insertar usuari nou\n2.Mostrar usuaris existents\n3.Seleccionar usuari\n4.Sortir\n5.Gestionar els teus amics");
 }
 
 int menu(){
@@ -24,6 +24,7 @@ int menu(){
         userlist[i].user = -1;
     }
     int opt = -1;
+    int opt2 = -1;
     while (opt == -1){
         print_menu();
         scanf("%d", &opt);
@@ -52,13 +53,15 @@ int menu(){
 
         }
         else if (opt == 2){
+            printf("Log in successful");
             for (int i = 0; i < MAX_USERS; i++){
                 if (userlist[i].user != -1){
                     printf("%s\tEdat:%d\tHobbies:%s",userlist[i].user,userlist[i].age,userlist[i].hobby);
                 }
             }
-            return 0;
+            return 69;
         }
+
         else if (opt == 3){
             //Selecció usuari
             char selected_user[MAX_LENGTH];
@@ -69,12 +72,14 @@ int menu(){
                 if (userlist[i].user != -1){
                     if (strcmp(&userlist[i].user,selected_user) == 0){
                         found_user = i;
+
                         break;
                     }
                 }
             }
             if (found_user == -1){
                 printf("No s'ha trobat l'usuari seleccionat\n");
+
             }
             else{
                 printf("Nom:%s\n",userlist[found_user].user);
@@ -83,6 +88,15 @@ int menu(){
                 printf("Ubicacio:%s\n",userlist[found_user].loc);
                 printf("Hobbies:%s,%s,%s,%s,%s\n",userlist[found_user].hobby[0],userlist[found_user].hobby[1],userlist[found_user].hobby[2],userlist[found_user].hobby[3],userlist[found_user].hobby[4]);
             }
+        }
+        else if (opt == 5){
+            //Seria bien que penjar una publicació/data per a fer un esport 7
+            printf("1. Enviar una solicitud d'amistat \n2. Gestionar solicituds pendents \n3. Penjar una publicació\n4. Mostrar listado de publicaciones\n5. Volver al menú")
+            scanf("%d", &opt2);
+            if (opt2 == 1){
+                scanf("Nombre de la persona con quien quieras connectar? %s", )
+            }
+
         }
         else if (opt == 4) {
             //Tancar
