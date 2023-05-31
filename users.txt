@@ -1,7 +1,7 @@
-jotita,18,javier24@gmail.com,cornellà,(fútbol,cine,baloncesto,tenis,música)
-enrich,19,paladins@vicio.com,bélgica,(fútbol,veganismo,pirotecnia,barcos,gasolina)
-victor,67,pelopantenne@turquia.com,poblenou,(fumar,ligar,dormir,enamorarse,descansar)
-gori,20,amomitierra@petra.com,petra,(fiesta,pueblo,fútbol,tractores,flores)
-marcel,18,paladins@elmejorjuego.com,barcelona,(baloncesto,paladins,animales,plantas,música)
-natalia,19,natynat@gmail.com,barcelona,(Marvel,videojuegos,música,animales,pasear)
+Javier,18,javier05@gmail.com,Cornellà,(fútbol,natación sincronizada,baloncesto,tenis,música)
+Enric,19,hendrick@yahoo.com,Tervuren,(fútbol,caminar,correr,natación,maratones)
+Victor,21,victor02@gmail.com,Barcelona,(thai-boxing,MMA,pasear,correr,tenis)
+Gori,19,ribot.gori@petra.com,Petra,(karting,fútbol,paddle,gimnasio,natación sincronizada)
+Marcel,18,m.medina@omegle.es,Barcelona,(baloncesto,caminar,natación,maratones,paddle surf)
+Natalia,19,natynat@hotmail.com,Barcelona,(gimnasio,correr,fútbol,paddle,pasear)
 
