@@ -1,7 +1,7 @@
-Javier,18,javier05@gmail.com,Cornellà,(fútbol,natación sincronizada,baloncesto,tenis,música)
-Enric,19,hendrick@yahoo.com,Tervuren,(fútbol,caminar,correr,natación,maratones)
-Victor,21,victor02@gmail.com,Barcelona,(thai-boxing,MMA,pasear,correr,tenis)
-Gori,19,ribot.gori@petra.com,Petra,(karting,fútbol,paddle,gimnasio,natación sincronizada)
-Marcel,18,m.medina@omegle.es,Barcelona,(baloncesto,caminar,natación,maratones,paddle surf)
-Natalia,19,natynat@hotmail.com,Barcelona,(gimnasio,correr,fútbol,paddle,pasear)
+Javier,18,javier05@gmail.com,Cornella,(futbol,natacion_sincronizada,baloncesto,tenis,musica)
+Enric,19,hendrick@yahoo.com,Tervuren,(futbol,caminar,correr,natacion,maratones)
+Victor,21,victor02@gmail.com,Barcelona,(thai_boxing,MMA,pasear,correr,tenis)
+Gori,19,ribot.gori@petra.com,Petra,(karting,futbol,paddle,gimnasio,natacion_sincronizada)
+Marcel,18,m.medina@omegle.es,Barcelona,(baloncesto,caminar,natacion,maratones,paddle_surf)
+Natalia,19,natynat@hotmail.com,Barcelona,(gimnasio,correr,futbol,paddle,pasear)
 
