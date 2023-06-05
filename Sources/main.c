@@ -27,45 +27,45 @@ typedef struct {
     User users[MAX_USERS];
 } List;
 typedef struct{
-    char key[MAX_LENGTH][100];
+    char key[100][MAX_LENGTH];
     int value[100];
     int num;
 } Dict;
 
-Dict dictionarycheck(Dict dict, char text[MAX_LENGTH_POST]){
+Dict* dictionarycheck(Dict* dict, Post* post) {
     char word[MAX_LENGTH];
-    int lenword;
+    int lenword = 0;
     for (int i = 0; i < MAX_LENGTH_POST; ++i) {
-        if ((text[i] != " " ) && (text[i] != "\0")){
-            //lletra
-            word[i] = text[i];
+        if (post->text[i] != ' ' && post->text[i] != '\0'&& post->text[i] != '\n') {
+            // lletra
+            word[lenword] = post->text[i];
             lenword++;
-        }
-        else{
-            //espai
-            //comprovem dict
-            int found = 0;
-            for (int j = 0; j < 100; ++j) {
-                if (dict.key[j] == word){
-                    dict.value[j]++;
-                    found = 1;
+        } else {
+            // espai o final
+            if (lenword > 0) {
+                // comprovem dict
+                int found = 0;
+                for (int j = 0; j < dict->num; ++j) {
+                    if (strcmp(dict->key[j], word) == 0) {
+                        dict->value[j]++;
+                        found = 1;
+                        break;
+                    }
                 }
-            }
-            if (found==0){
-                for (int j = 0; j < lenword-1; ++j) {
-                    dict.key[dict.num][j] = word[j];
+                if (found == 0) {
+                    strcpy(dict->key[dict->num], word);
+                    dict->value[dict->num] = 1;
+                    dict->num++;
                 }
-                dict.value[dict.num]=1;
-                dict.num++;
+                // buidem word
+                memset(word, 0, sizeof(char) * MAX_LENGTH);
+                lenword = 0;
             }
-            //buidem word
-            memset(word, 0, sizeof(word));
-            lenword = 0;
         }
-
     }
     return dict;
 }
+
 List readUsersFromFile(const char* filename) {
     List list;
     FILE* file = fopen(filename, "r");
@@ -112,14 +112,11 @@ Dict readDictFromFile(const char* filename) {
 void print_menu(){
     printf("\n1.Insertar usuari nou\n2.Mostrar usuaris existents\n3.Seleccionar usuari\n4.Sortir\n");
 }
-int menu(List list, Dict dict, int canviusuari){
+int menu(List list, Dict dict){
     int opt = -1;
     while (opt == -1){
         print_menu();
-        if (canviusuari == 1){
-            opt = 3;
-        }
-        else scanf("%d", &opt);
+        scanf("%d", &opt);
         if (opt == 1){
             //Insertar usuari nou
             User newuser;
@@ -156,30 +153,27 @@ int menu(List list, Dict dict, int canviusuari){
             printf("\n");
             return 0;
         }
-        else if (opt == 3){
+        else if (opt == 3) {
             //Selecció usuari
             char selected_user[MAX_LENGTH];
             printf("Introdueix el nom de l'usuari seleccionat:");
-            scanf("%s", &selected_user);
+            scanf("%s", selected_user);
             int found_user = -1;
-            for (int i = 0; i <= list.num; i++){
-                if ( &list.users[i].user != -1){
-                    if (strcmp( &list.users[i].user,selected_user) == 0){
-                        found_user=i;
-                        break;
-                    }
+            for (int i = 0; i < list.num; i++) {
+                if (strcmp(list.users[i].user, selected_user) == 0) {
+                    found_user = i;
+                    break;
                 }
             }
-            if (found_user == -1){
+            if (found_user == -1) {
                 printf("No s'ha trobat l'usuari seleccionat\n");
-            }
-            else{
-                printf("Nom:%s\n", &list.users[found_user].user);
+            } else {
+                printf("Nom:%s\n", list.users[found_user].user);
                 printf("Edat:%d\n", list.users[found_user].age);
                 printf("Mail:%s\n", list.users[found_user].mail);
                 printf("Ubicacio:%s\n", list.users[found_user].loc);
-                printf("Hobbies:%s,%s,%s,%s,%s\n", &list.users[found_user].hobby[0], &list.users[found_user].hobby[1], &list.users[found_user].hobby[2], &list.users[found_user].hobby[3], &list.users[found_user].hobby[4]);
-                int selected_user = found_user;
+                printf("Hobbies:%s,%s,%s,%s,%s\n", list.users[found_user].hobby[0], list.users[found_user].hobby[1], list.users[found_user].hobby[2], list.users[found_user].hobby[3], list.users[found_user].hobby[4]);
+                int selected_user_index = found_user;
                 //Processos usuari
                 printf("\n1. Solicitud amistat\n2. Publicacio\n3. Enrere\n");
                 opt = -1;
@@ -187,57 +181,57 @@ int menu(List list, Dict dict, int canviusuari){
                     scanf("%d", &opt);
                     if (opt == 1) {
                         char friend[MAX_LENGTH];
-                        scanf("%s", &friend);
+                        scanf("%s", friend);
                         int found_user = -1;
                         for (int i = 0; i < list.num; i++) {
-                            if (strcmp(&list.users[i].user, friend) == 0) {
-                                int friend = i;
-                                found_user = 1;
+                            if (strcmp(list.users[i].user, friend) == 0) {
+                                found_user = i;
                                 break;
                             }
                         }
-                        if (found_user == 1){
+                        if (found_user != -1) {
                             int newfriend = 0;
                             int i = 0;
-                            while ((newfriend == 0) && (i <= MAX_FRIENDS)){
-                                if (list.users[selected_user].friends[i] == -1 ){
+                            while (newfriend == 0 && i < MAX_FRIENDS) {
+                                if (list.users[selected_user_index].friends[i] == -1) {
                                     //solicitud amic
                                     newfriend = 1;
+                                    list.users[selected_user_index].friends[i] = found_user;
+                                    printf("Solicitud amistat enviada.\n");
+                                    break;
                                 }
                                 i += 1;
-
                             }
+                            if (newfriend == 0) {
+                                printf("Ja has arribat al límit d'amistats.\n");
+                            }
+                        } else {
+                            printf("No s'ha trobat l'usuari.\n");
                         }
-                        else printf("No s'ha trobat l'usuari.");
-                    }
-                    else if (opt==2){
-
-                        if (list.users[selected_user].num_posts >= MAX_POSTS) {
-                            printf("Has arribat al limit de publicacions.");
-                        }
-                        else {
+                    } else if (opt == 2) {
+                        if (list.users[selected_user_index].num_posts >= MAX_POSTS) {
+                            printf("Has arribat al límit de publicacions.\n");
+                        } else {
                             Post post;
                             time(&post.t);
-                            printf("Temps:%s",ctime(&post.t));
-                            scanf("Escriu el text de la teva publicació: ", &post.text);
-                            list.users[selected_user].posts[list.users[selected_user].num_posts] = post;
-                            list.users[selected_user].num_posts++;
-                            dict = dictionarycheck(dict,post.text);
-                            FILE* file = fopen("../users.txt","w");
+                            printf("Temps:%s", ctime(&post.t));
+                            scanf("%s", post.text);
+                            list.users[selected_user_index].posts[list.users[selected_user_index].num_posts] = post;
+                            list.users[selected_user_index].num_posts++;
+                            dictionarycheck(&dict, &post);
+                            FILE* file = fopen("../dict.txt", "w");
                             if (file == NULL) {
-                                printf("No s'ha pogut obrir el fitxer");
-                            }
-                            else{
+                                printf("No s'ha pogut obrir el fitxer.\n");
+                            } else {
                                 for (int i = 0; i < dict.num; ++i) {
-                                    fprintf(file, "%s,%d\n",dict.key[i],dict.value[i]);
+                                    fprintf(file, "%s,%d\n", dict.key[i], dict.value[i]);
                                 }
                                 fclose(file);
                             }
+                            printf("Publicacio completada.\n");
+                            break;
                         }
-                        return 0;
-                    }
-                    else if (opt==3){
-                        opt = -1;
+                    } else if (opt == 3) {
                         return 0;
                     }
                 }
@@ -257,11 +251,10 @@ int menu(List list, Dict dict, int canviusuari){
 
 int main() {
     List list = readUsersFromFile("../users.txt");
-    Dict dict = readDictFromFile("../dict/txt");
+    Dict dict = readDictFromFile("../dict.txt");
     int stop = 0;
-    int canviusuari = 0;
     while (stop==0) {
-        stop = menu(list,dict,canviusuari);
+        stop = menu(list,dict);
     }
     return 0;
 }
