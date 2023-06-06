@@ -1,2 +1,5 @@
+mare,1
 bon,2
-Bon,1
+dia,2
+felicitats,1
+i,5

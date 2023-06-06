@@ -22,8 +22,6 @@ typedef struct  {
     Node* rear;
 } Queue ;
 
-
-
 typedef struct{
     char user[MAX_LENGTH];
     int age;
@@ -48,7 +46,13 @@ typedef struct{
 
 //funcions queue
 int isEmpty(Queue* queue) {
-    return (queue->front == NULL);
+    printf("Q");
+    if (queue->front == NULL){
+        printf("Buit");
+        return 1;
+    }
+    printf("nooo");
+    return 0;
 }
 Queue* createQueue() {
     Queue* queue = (Queue*) malloc(sizeof(Queue*));
@@ -59,16 +63,18 @@ void enqueue(Queue* queue, int data) {
     Node* newNode = (Node*)malloc(sizeof(Node));
     newNode->data = data;
     newNode->next = NULL;
-    if (isEmpty(queue)) {
+    if (isEmpty(queue) == 1) {
+        printf("Hola2");
         queue->front = queue->rear = newNode;
+        printf("Hola2");
     } else {
-        queue->rear->next = newNode;
+        printf("No");
+        queue->rear->next = (struct Node *) newNode;
         queue->rear = newNode;
     }
 }
 int dequeue(Queue* queue) {
     if (isEmpty(queue)) {
-        printf("Queue is empty.\n");
         return -1;
     }
     Node* temp = queue->front;
@@ -89,8 +95,6 @@ void proces_solicitud(Queue* queue) {
     printf("Solicituds: ");
     while (temp != NULL) {
         printf("%d ", temp->data);
-
-        scanf;
         temp = temp->next;
     }
     printf("\n");
@@ -128,7 +132,7 @@ int useractions(List list, Dict dict,int selected_user_index) {
     int opt = -1;
     while (opt == -1){
         fflush(stdin);
-        printf("\n1. Solicitud amistat\n2. Publicacio\n3. Enrere\n");
+        printf("\n1. Solicitud amistat\n2. Publicacio\n3. Veure publicacions teves\n 4.Veure publicacions d'amics\n5. Enrere\n");
         scanf("%d", &opt);
         if (opt == 1) {
             char friend[MAX_LENGTH];
@@ -162,10 +166,11 @@ int useractions(List list, Dict dict,int selected_user_index) {
                 Post post;
                 time(&post.t);
                 printf("Temps:%s", ctime(&post.t));
-                scanf("%s", post.text);
+                fflush(stdin);
+                scanf("%[^\n]", post.text);
                 list.users[selected_user_index].posts[list.users[selected_user_index].num_posts] = post;
                 list.users[selected_user_index].num_posts++;
-                dictionarycheck(&dict, &post);
+                dict =*( dictionarycheck(&dict, &post));
                 FILE *file = fopen("../dict.txt", "w");
                 if (file == NULL) {
                     printf("No s'ha pogut obrir el fitxer.\n");
@@ -178,6 +183,21 @@ int useractions(List list, Dict dict,int selected_user_index) {
             printf("Publicacio completada.\n");
             opt =-1;
             }
+        }
+        else if (opt==3){
+                if (list.users[selected_user_index].num_posts > 0) {
+                    for (int i = 0; i < list.users[selected_user_index].num_posts; ++i) {
+                        printf("\n- - - - - - - - -- - - - -\n%s%s", ctime(&list.users[selected_user_index].posts[i].t),
+                               list.users[selected_user_index].posts[i].text);
+
+                    }
+                }
+                else{
+                printf("\nEncara no has fet publicacions.");
+            }
+        }
+        else if (opt==4){
+            return 0;
         }
         else{
             return 0;
@@ -231,6 +251,11 @@ Dict readDictFromFile(const char* filename) {
 void print_menu(){
     printf("\n1.Insertar usuari nou\n2.Mostrar usuaris existents\n3.Seleccionar usuari\n4.Sortir\n");
 }
+void init_users(List list){
+    for (int i = 0; i < list.num; ++i) {
+        list.users->sol= createQueue();
+    }
+}
 User usuari_nou() {
     User newuser;
     printf("Usuari:");
@@ -251,7 +276,7 @@ User usuari_nou() {
     return newuser;
 }
 int menu(List list, Dict dict){
-
+    init_users(list);
     int opt = -1;
     while (opt == -1){
         print_menu();
@@ -273,7 +298,7 @@ int menu(List list, Dict dict){
             opt = -1;
         }
         else if (opt == 2){
-            for (int i = 0; i < list.num-1; i++){
+            for (int i = 0; i < list.num; i++){
                 printf("\n%s\tEdat:%d\tHobbies:%s,%s,%s,%s,%s", list.users[i].user, list.users[i].age, list.users[i].hobby[0],list.users[i].hobby[1],list.users[i].hobby[2],list.users[i].hobby[3],list.users[i].hobby[4]);
             }
             printf("\n");
@@ -313,7 +338,6 @@ int menu(List list, Dict dict){
         else {
             printf("Introdueix un valor de 1 a 4\n");
         }
-        printf("Hola");
     }
     return 0;
 }
