@@ -1,7 +1,6 @@
-Javier,18,javier05@gmail.com,Cornella,(futbol,natacion_sincronizada,baloncesto,tenis,musica)
+Javier,18,javier05@gmail.com,Cornella,(futbol,natacion,baloncesto,tenis,musica)
 Enric,19,hendrick@yahoo.com,Tervuren,(futbol,caminar,correr,natacion,maratones)
 Victor,21,victor02@gmail.com,Barcelona,(thai_boxing,MMA,pasear,correr,tenis)
-Gori,19,ribot.gori@petra.com,Petra,(karting,futbol,paddle,gimnasio,natacion_sincronizada)
+Gori,19,ribot.gori@petra.com,Petra,(karting,futbol,paddle,gimnasio,natacion)
 Marcel,18,m.medina@omegle.es,Barcelona,(baloncesto,caminar,natacion,maratones,paddle_surf)
 Natalia,19,natynat@hotmail.com,Barcelona,(gimnasio,correr,futbol,paddle,pasear)
-
