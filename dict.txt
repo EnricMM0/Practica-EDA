@@ -1,9 +1,8 @@
-correr,5
-bon,5
-dia,5
+dia,6
 a,4
 senyors,3
-i,1
+i,3
+pachanga,2
 vaig,1
 algu,1
 apunta,1
@@ -13,8 +12,12 @@ volei,1
 avui,1
 la,1
 platja,1
-Avui,1
 vull,1
 molt,1
-Algu,1
 per,1
+Viva,1
+qetra,1
+vela,1
+dema,1
+basquet,1
+mola,1

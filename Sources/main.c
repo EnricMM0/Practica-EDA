@@ -49,7 +49,6 @@ typedef struct{
     int num;
 } Dict;
 
-
 void envia_solicitud(User* enviador, User* recipient){
     Soli* newSoli = (Soli*) malloc(sizeof(Soli));
     strcpy(newSoli->sender,enviador->user);
@@ -158,7 +157,7 @@ Dict* dictionarycheck(Dict* dict, Post* post) {
             }
         }
         if (found == 0){
-            if (dict->num == MAX_LENGTH){
+            if (dict->num == MAX_WORDS){
                 printf("El diccionari esta ple i no rebra mes paraules\n");
                 break;
             }
@@ -197,11 +196,9 @@ Dict readDictFromFile(const char* filename) {
     char line[200];
 
     dict.num = 0;
-
     while (fgets(line, sizeof(line), file) != NULL) {
         sscanf(line,"%[^,],%d",dict.key[dict.num], &dict.value[dict.num]);
         dict.num++;
-
     }
     fclose(file);
     return dict;
@@ -211,7 +208,7 @@ void useractions(Dict dict,User* selected, User **head) {
     int opt = -1;
     while (opt == -1) {
         fflush(stdin);
-        printf("\n1. Solicitud amistat\n2. Publicacio\n3. Veure publicacions teves\n4.Veure publicacions d'amics\n5. Veure solicituds pendents\n6. Enrere\n");
+        printf("\n1.Solicitud amistat\n2.Publicacio\n3.Veure publicacions teves\n4.Veure publicacions d'amics\n5.Veure solicituds pendents\n6.Enrere\n");
         scanf("%d", &opt);
         if (opt == 1) {
             char friend[MAX_LENGTH];
@@ -448,8 +445,16 @@ void menu(User **head, Dict dict){
             printf("Mail:%s\n", selected->mail);
             printf("Ubicacio:%s\n", selected->loc);
             printf("Hobbies:%s,%s,%s,%s,%s\n", selected->hobby[0], selected->hobby[1], selected->hobby[2], selected->hobby[3], selected->hobby[4]);
+            Friend* friend = selected->friends.head;
+            printf("Amics:");
+            while (friend != NULL) {
+                User* amic = trobar_user(*head, friend->user);
+                printf("%s  ",amic->user);
+                friend = friend->next;
+            }
+            printf("\n");
             //Processos usuari
-            useractions(dict,selected,head);
+            useractions(dict, selected, head);
             opt = -1;
 
         }
@@ -457,8 +462,9 @@ void menu(User **head, Dict dict){
             dict = readDictFromFile("../dict.txt");
             Dictsort(&dict);
             printf("\nParaules mes usades:\n");
+            printf("Ranking\tUsos\tParaula\n");
             for (int i = 0; i < 10; ++i) {
-                printf("%d)\t%s:\t%d\n", i+1, dict.key[i],dict.value[i]);
+                printf("%d)\t%d\t%s\n", i+1, dict.value[i],dict.key[i]);
             }
             opt = -1;
         }
