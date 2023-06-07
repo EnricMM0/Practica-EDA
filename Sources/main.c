@@ -14,13 +14,13 @@ typedef struct {
 } Post;
 
 typedef struct {
-    int data;
-    struct Node* next;
-} Node;
+    int sender_index;
+    struct Soli* next;
+} Soli;
 typedef struct  {
-    Node* front;
-    Node* rear;
-} Queue ;
+    Soli *front;
+    Soli *rear;
+} QueueSoli ;
 
 typedef struct{
     char user[MAX_LENGTH];
@@ -32,7 +32,7 @@ typedef struct{
     int num_friends;
     Post posts[MAX_POSTS];
     int num_posts;
-    Queue* sol;
+    QueueSoli* sol;
 } User;
 typedef struct {
     int num;
@@ -45,59 +45,54 @@ typedef struct{
 } Dict;
 
 //funcions queue
-int isEmpty(Queue* queue) {
-    printf("Q");
+int isEmpty(QueueSoli* queue) {
     if (queue->front == NULL){
-        printf("Buit");
         return 1;
     }
-    printf("nooo");
     return 0;
 }
-Queue* createQueue() {
-    Queue* queue = (Queue*) malloc(sizeof(Queue*));
-    queue->front = queue->rear = NULL;
+QueueSoli* createQueue() {
+    QueueSoli* queue = malloc(sizeof(QueueSoli));
+    queue->front = NULL;
+    queue->rear = NULL;
     return queue;
 }
-void enqueue(Queue* queue, int data) {
-    Node* newNode = (Node*)malloc(sizeof(Node));
-    newNode->data = data;
+void enqueue(QueueSoli* queue, int sender_index) {
+    Soli* newNode = (Soli*)malloc(sizeof(Soli));
+    newNode->sender_index = sender_index;
     newNode->next = NULL;
-    if (isEmpty(queue) == 1) {
+    printf("Hola1");
+    if (queue->front == NULL){
         printf("Hola2");
         queue->front = queue->rear = newNode;
-        printf("Hola2");
-    } else {
+        printf("Hola3");
+    }
+    else {
         printf("No");
-        queue->rear->next = (struct Node *) newNode;
+        queue->rear->next = (struct Soli*) newNode;
         queue->rear = newNode;
     }
 }
-int dequeue(Queue* queue) {
+int dequeue(QueueSoli* queue) {
     if (isEmpty(queue)) {
         return -1;
     }
-    Node* temp = queue->front;
-    int data = temp->data;
+    Soli* temp = queue->front;
+    int sender = temp->sender_index;
     queue->front = queue->front->next;
     free(temp);
     if (queue->front == NULL) {
         queue->rear = NULL;
     }
-    return data;
+    return sender;
 }
-void proces_solicitud(Queue* queue) {
+
+void proces_solicitud(QueueSoli* queue) {
     if (isEmpty(queue)) {
         printf("No tens solicituds pendents.\n");
         return;
     }
-    Node* temp = queue->front;
-    printf("Solicituds: ");
-    while (temp != NULL) {
-        printf("%d ", temp->data);
-        temp = temp->next;
-    }
-    printf("\n");
+    //processar solicituds
 }
 
 
@@ -128,16 +123,52 @@ Dict* dictionarycheck(Dict* dict, Post* post) {
     free(copy);
     return dict;
 }
-int useractions(List list, Dict dict,int selected_user_index) {
+void Dictsort(Dict* dict) {
+    for (int i = 0; i < dict->num - 1; i++) {
+        for (int j = 0; j < dict->num - i - 1; j++) {
+            if (dict->value[j] < dict->value[j + 1]) {
+                char tempkey[100];
+                strcpy(tempkey, dict->key[j]);
+                int tempvalue = dict->value[j];
+                dict->value[j] = dict->value[j + 1];
+                strcpy(dict->key[j] ,dict->key[j+1]);
+                dict->value[j + 1] = tempvalue;
+                strcpy(dict->key[j + 1] ,tempkey);
+            }
+        }
+    }
+}
+Dict readDictFromFile(const char* filename) {
+    Dict dict;
+    FILE* file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("No s'ha pogut obrir el fitxer %s\n", filename);
+        dict.num = 0;
+        return dict;
+    }
+    char line[200];
+
+    dict.num = 0;
+
+    while (fgets(line, sizeof(line), file) != NULL) {
+        sscanf(line,"%[^,],%d",dict.key[dict.num], &dict.value[dict.num]);
+        dict.num++;
+
+    }
+    fclose(file);
+    return dict;
+}
+void useractions(List list, Dict dict,int selected_user_index) {
     int opt = -1;
     while (opt == -1){
         fflush(stdin);
-        printf("\n1. Solicitud amistat\n2. Publicacio\n3. Veure publicacions teves\n 4.Veure publicacions d'amics\n5. Enrere\n");
+        printf("\n1. Solicitud amistat\n2. Publicacio\n3. Veure publicacions teves\n4.Veure publicacions d'amics\n5. Veure solicituds pendents\n6. Enrere\n");
         scanf("%d", &opt);
         if (opt == 1) {
             char friend[MAX_LENGTH];
             printf("Introdueix el usuari de l'amic:");
             scanf("%s", friend);
+            fflush(stdin);
             int found_user = -1;
             for (int i = 0;i < list.num; i++) {
                 if (strcmp(list.users[i].user, friend) == 0) {
@@ -170,7 +201,9 @@ int useractions(List list, Dict dict,int selected_user_index) {
                 scanf("%[^\n]", post.text);
                 list.users[selected_user_index].posts[list.users[selected_user_index].num_posts] = post;
                 list.users[selected_user_index].num_posts++;
+                dict = readDictFromFile("../dict.txt");
                 dict =*( dictionarycheck(&dict, &post));
+                Dictsort(&dict);
                 FILE *file = fopen("../dict.txt", "w");
                 if (file == NULL) {
                     printf("No s'ha pogut obrir el fitxer.\n");
@@ -197,10 +230,13 @@ int useractions(List list, Dict dict,int selected_user_index) {
             }
         }
         else if (opt==4){
-            return 0;
+            //Veure publicacions de amics
+        }
+        else if (opt==5){
+            proces_solicitud(list.users[selected_user_index].sol);
         }
         else{
-            return 0;
+            return;
         }
     }
 }
@@ -228,32 +264,12 @@ List readUsersFromFile(const char* filename) {
     return *list;
 }
 
-Dict readDictFromFile(const char* filename) {
-    Dict dict;
-    FILE* file = fopen(filename, "r");
-    if (file == NULL) {
-        printf("No s'ha pogut obrir el fitxer %s\n", filename);
-        dict.num = 0;
-        return dict;
-    }
-    char line[200];
-
-    dict.num = 0;
-
-    while (fgets(line, sizeof(line), file) != NULL) {
-        sscanf(line,"%[^,],%d",dict.key[dict.num], &dict.value[dict.num]);
-        dict.num++;
-
-    }
-    fclose(file);
-    return dict;
-}
 void print_menu(){
-    printf("\n1.Insertar usuari nou\n2.Mostrar usuaris existents\n3.Seleccionar usuari\n4.Sortir\n");
+    printf("\n1.Insertar usuari nou\n2.Mostrar usuaris existents\n3.Seleccionar usuari\n4. Imprimir paraules mes fetes servir\n5.Sortir\n");
 }
 void init_users(List list){
     for (int i = 0; i < list.num; ++i) {
-        list.users->sol= createQueue();
+        list.users[i].sol= createQueue();
     }
 }
 User usuari_nou() {
@@ -276,7 +292,6 @@ User usuari_nou() {
     return newuser;
 }
 int menu(List list, Dict dict){
-    init_users(list);
     int opt = -1;
     while (opt == -1){
         print_menu();
@@ -294,6 +309,7 @@ int menu(List list, Dict dict){
 
                 fclose(file);
                 list = readUsersFromFile("../users.txt");
+                init_users(list);
             }
             opt = -1;
         }
@@ -331,12 +347,20 @@ int menu(List list, Dict dict){
                 opt = -1;
             }
         }
-        else if (opt == 4) {
+        else if (opt == 4){
+            dict = readDictFromFile("../dict.txt");
+            Dictsort(&dict);
+            printf("\nParaules mes usades:\n");
+            for (int i = 0; i < 10; ++i) {
+                printf("%d)\t%s:\t%d\n", i+1, dict.key[i],dict.value[i]);
+            }
+        }
+        else if (opt == 5) {
             //Tancar
             return 0;
         }
         else {
-            printf("Introdueix un valor de 1 a 4\n");
+            printf("Introdueix un valor de 1 a 5\n");
         }
     }
     return 0;
