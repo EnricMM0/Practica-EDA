@@ -3,4 +3,4 @@ project(untitled5 C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(untitled5 Sources/main.c Headers/main.h)
+add_executable(EDA2 main.c usuari.c dict.c friends.c posts.c)
