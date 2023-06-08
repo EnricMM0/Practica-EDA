@@ -6,7 +6,7 @@ void readPostsFromFile(const char* filename, User **head) {
         printf("No s'ha pogut obrir el fitxer %s\n", filename);
         return;
     }
-    char line[200];
+    char line[200]; //búfer de línea
 
     while (fgets(line, sizeof(line), file) != NULL) {
         Post *post = (Post *)malloc(sizeof(Post));
