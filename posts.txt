@@ -1,0 +1,8 @@
+Javier,futbol a las 6?|1686256385
+Javier,volei en la playa|1686256407
+Victor,sessio gimnas avui|1686256422
+Victor,gimnas tres vegades a la setmana|1686256464
+Victor,heu vist el barca? futbol futbol futbol|1686256477
+Enric,basquet basquet o futbol|1686256523
+Enric,futbol al parc|1686256531
+Enric,el partit del barca molt emocionant|1686256827
