@@ -1,3 +1,5 @@
+Vídeo: https://youtu.be/YB0XBqBL2Hc
+
 ESTRUCTURA DE DADES I ALGORISMES II,  2022-2023
 Pràctica final
 
